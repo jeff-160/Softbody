@@ -6,16 +6,10 @@ window.addEventListener("keyup", e => {
 
         Composite.allComposites(engine.world).forEach(composite => {
             composite.constraints.filter(constraint =>
-                constraint.label == "outerSpring"
+                constraint.label == "outerSpring" || constraint.label == "weldLink"
             ).forEach(constraint => {
                 constraint.render.visible = !constraint.render.visible
             })
-        })
-
-        engine.world.constraints.filter(constraint => 
-            constraint.label == "weldLink"
-        ).forEach(constraint => {
-            constraint.render.visible = !constraint.render.visible
         })
     }
 })
@@ -79,23 +73,15 @@ function LoadEvents() {
 }
 
 async function CreateAmogus() {
-    const body = await LoadSoftBody("body.json", window.innerWidth / 2, -100, 1, 0.005)
-    const visor = await LoadSoftBody("visor.json", window.innerWidth / 2, -100, 0.25, 0.008)
+    const body = await LoadSoftBody("body.json", window.innerWidth / 2, 0, 1, 0.005)
+    const visor = await LoadSoftBody("visor.json", window.innerWidth / 2, 0, 0.25, 0.008)
 
     amogus = [body, visor]
 
     amogus.forEach(part => World.add(engine.world, part))
 
-    const welds1 = AddWeld(body, [[140, 80], [180, 80]])
+    const welds1 = AddWeld(body, [[150, 80], [190, 80]])
     const welds2 = AddWeld(visor, [[30, 40], [70, 40]])
 
-    JoinWelds(welds1, welds2, 0.8)
-
-    // all parts must be rotated
-    amogus.forEach(body => {
-        Composite.rotate(body, Math.PI / 3, {
-            x: Composite.bounds(body).min.x,
-            y: Composite.bounds(body).min.y
-        })
-    })
+    JoinWelds(welds1, welds2)
 }

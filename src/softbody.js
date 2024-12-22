@@ -13,6 +13,7 @@ async function LoadSoftBody(vertexFile, x, y, scale, springStiffness) {
 
         const particleBodies = vertices.map(vertex => 
             Bodies.circle(x + vertex.x, y + vertex.y, 1, {
+                label: "node",
                 mass: 1,
                 render: {
                     visible: false
@@ -71,7 +72,7 @@ async function LoadSoftBody(vertexFile, x, y, scale, springStiffness) {
 function RenderSoftBody(softBody, color) {
     const context = render.context
 
-    const vertices = Composite.allBodies(softBody).flatMap(body => body.vertices)
+    const vertices = Composite.allBodies(softBody).filter(body => body.label != "weld").flatMap(body => body.vertices)
 
     context.save()
     context.beginPath()
@@ -95,7 +96,8 @@ function AddWeld(composite, offsets) {
     const welds = []
 
     for (const offset of offsets) {
-        const weld = Bodies.circle(x + offset[0], y + offset[1], 1, { 
+        const weld = Bodies.circle(x + offset[0], y + offset[1], 1, {
+            label: "weld",
             mass: 1,
             render: {
                 visible: false
@@ -103,7 +105,7 @@ function AddWeld(composite, offsets) {
         })
         
         welds.push(weld)
-        
+
         for (const body of composite.bodies) {
             constraints.push(
                 Constraint.create({
@@ -129,22 +131,20 @@ function AddWeld(composite, offsets) {
                 visible: false
             }
         })
-    )
-
-    World.add(engine.world, [...welds, ...constraints])
+    ) 
+    
+    Composite.add(composite, [...welds, ...constraints])
 
     return welds
 }
 
-function JoinWelds(weld1, weld2, stiffness) {
+function JoinWelds(weld1, weld2) {
     for (let i = 0 ; i < 2 ; i++) {
-        Body.setPosition(weld2[i], weld1[i].position)
-
         World.add(engine.world, 
             Constraint.create({
                 bodyA: weld1[i],
                 bodyB: weld2[i],
-                stiffness: stiffness,
+                stiffness: 0.5,
                 length: 0,
                 render: {
                     visible: false
