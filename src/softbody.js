@@ -31,7 +31,10 @@ async function LoadSoftBody(vertexFile, x, y, scale, springStiffness) {
                     bodyA: particleBodies[i],
                     bodyB: particleBodies[next],
                     stiffness: springStiffness,
-                    isStatic: true
+                    isStatic: true,
+                    render: {
+                        visible: false
+                    }
                 })
             )
         }
@@ -53,10 +56,6 @@ async function LoadSoftBody(vertexFile, x, y, scale, springStiffness) {
                 }
             }
         }
-
-        constraints.forEach(constraint => {
-            constraint.render.visible = false
-        })
 
         const softBody = Composite.create({
             bodies: particleBodies,
@@ -111,7 +110,10 @@ function AddWeld(composite, offsets) {
                     label: "weldSpring",
                     bodyA: body,
                     bodyB: weld,
-                    stiffness: 0.5
+                    stiffness: 0.5,
+                    render: {
+                        visible: false
+                    }
                 })
             )
         }
@@ -122,13 +124,12 @@ function AddWeld(composite, offsets) {
             label: "weldConnection",
             bodyA: welds[0],
             bodyB: welds[1],
-            stiffness: 1
+            stiffness: 1,
+            render: {
+                visible: false
+            }
         })
     )
-
-    constraints.forEach(constraint => {
-        constraint.render.visible = false
-    })
 
     World.add(engine.world, [...welds, ...constraints])
 

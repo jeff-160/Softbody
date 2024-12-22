@@ -2,7 +2,7 @@ let wireframes = false
 
 window.addEventListener("keyup", e => {
     if (e.key === " ") {
-        wireframes = !wireframes
+        render.options.wireframes = wireframes = !wireframes
 
         Composite.allComposites(engine.world).forEach(composite => {
             composite.constraints.filter(constraint =>
@@ -56,12 +56,12 @@ window.onload = async () => {
 
     World.add(engine.world, ground)
 
-    CreateAmogus()
-    
+    await CreateAmogus()
+ 
     LoadEvents()
 }
 
-let bodies = []
+let amogus = []
 
 function LoadEvents() {
     Events.on(render, "afterRender", () => {
@@ -73,9 +73,8 @@ function LoadEvents() {
         if (wireframes)
             return
 
-        bodies.forEach(body => {
-            RenderSoftBody(...body)
-        })
+        RenderSoftBody(amogus[0], "red")
+        RenderSoftBody(amogus[1], "lightblue")
     })
 }
 
@@ -86,23 +85,20 @@ async function CreateAmogus() {
     const body = await LoadSoftBody("body.json", window.innerWidth / 2, -100, bodyScale, 0.005)
     const visor = await LoadSoftBody("visor.json", window.innerWidth / 2, -100, visorScale, 0.008)
 
-    bodies = [
-        [body, "red"],
-        [visor, "lightblue"]
-    ]
+    amogus = [body, visor]
 
-    bodies.forEach(part => World.add(engine.world, part))
+    amogus.forEach(part => World.add(engine.world, part))
 
-    const welds1 = AddWeld(body, [[140, 80], [180, 80]], bodyScale)
+    const welds1 = AddWeld(body, [[150, 80], [190, 80]], bodyScale)
     const welds2 = AddWeld(visor, [[30, 40], [70, 40]], visorScale)
 
     JoinWelds(welds1, welds2, 0.8)
 
     // all parts must be rotated
-    bodies.forEach(body => {
-        Composite.rotate(body[0], Math.PI / 3, {
-            x: Composite.bounds(body[0]).min.x,
-            y: Composite.bounds(body[0]).min.y
+    amogus.forEach(body => {
+        Composite.rotate(body, Math.PI / 3, {
+            x: Composite.bounds(body).min.x,
+            y: Composite.bounds(body).min.y
         })
     })
 }
