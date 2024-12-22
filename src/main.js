@@ -89,7 +89,7 @@ async function CreateAmogus() {
 
     amogus.forEach(part => World.add(engine.world, part))
 
-    const welds1 = AddWeld(body, [[150, 80], [190, 80]], bodyScale)
+    const welds1 = AddWeld(body, [[140, 80], [180, 80]], bodyScale)
     const welds2 = AddWeld(visor, [[30, 40], [70, 40]], visorScale)
 
     JoinWelds(welds1, welds2, 0.8)
