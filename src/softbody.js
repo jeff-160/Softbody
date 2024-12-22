@@ -70,7 +70,7 @@ async function LoadSoftBody(vertexFile, x, y, scale, springStiffness) {
 function RenderSoftBody(softBody, color) {
     const context = render.context
 
-    const vertices = Composite.allBodies(softBody).filter(body => body.label != "weld").flatMap(body => body.vertices)
+    const vertices = Composite.allBodies(softBody).filter(body => body.label == "node").flatMap(body => body.vertices)
 
     context.save()
     context.beginPath()
