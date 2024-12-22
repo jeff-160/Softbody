@@ -79,18 +79,15 @@ function LoadEvents() {
 }
 
 async function CreateAmogus() {
-    const bodyScale = 1
-    const visorScale = 0.25
-
-    const body = await LoadSoftBody("body.json", window.innerWidth / 2, -100, bodyScale, 0.005)
-    const visor = await LoadSoftBody("visor.json", window.innerWidth / 2, -100, visorScale, 0.008)
+    const body = await LoadSoftBody("body.json", window.innerWidth / 2, -100, 1, 0.005)
+    const visor = await LoadSoftBody("visor.json", window.innerWidth / 2, -100, 0.25, 0.008)
 
     amogus = [body, visor]
 
     amogus.forEach(part => World.add(engine.world, part))
 
-    const welds1 = AddWeld(body, [[140, 80], [180, 80]], bodyScale)
-    const welds2 = AddWeld(visor, [[30, 40], [70, 40]], visorScale)
+    const welds1 = AddWeld(body, [[140, 80], [180, 80]])
+    const welds2 = AddWeld(visor, [[30, 40], [70, 40]])
 
     JoinWelds(welds1, welds2, 0.8)
 
