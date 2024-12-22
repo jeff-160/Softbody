@@ -121,7 +121,7 @@ function AddWeld(composite, offsets) {
 
     constraints.push(
         Constraint.create({
-            label: "weldConnection",
+            label: "weldLink",
             bodyA: welds[0],
             bodyB: welds[1],
             stiffness: 1,

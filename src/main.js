@@ -13,7 +13,7 @@ window.addEventListener("keyup", e => {
         })
 
         engine.world.constraints.filter(constraint => 
-            constraint.label == "weldConnection"
+            constraint.label == "weldLink"
         ).forEach(constraint => {
             constraint.render.visible = !constraint.render.visible
         })
