@@ -30,8 +30,8 @@ window.onload = async () => {
         element: document.body,
         engine: engine,
         options: {
-            width: window.innerWidth,
-            height: window.innerHeight,
+            width: 1280,
+            height: 593,
             wireframes: false,
         }
     })
