@@ -4,9 +4,7 @@ async function LoadSoftBody(vertexFile, x, y, scale, springStiffness) {
             (v, index, self) => 
                 index === self.findIndex((s) => ~~s.x === ~~v.x && ~~s.y === ~~v.y) 
         )
-        vertices = Vertices.clockwiseSort(vertices)
-
-        vertices = vertices.map(vertex => ({
+        vertices = Vertices.clockwiseSort(vertices).map(vertex => ({
             x: vertex.x * scale,
             y: vertex.y * scale
         }))
