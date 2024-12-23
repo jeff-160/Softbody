@@ -6,7 +6,7 @@ class Softbody {
         this.welds = []
     }
 
-    static async create(vertexFile, x, y, scale, springStiffness, color) {
+    static async Load(vertexFile, x, y, scale, springStiffness, color) {
         const softBody = await fetch(`assets/${vertexFile}`).then(res => res.json()).then(data => {
             let vertices = data["vertices"].flat().filter((v, index, self) => 
                 index === self.findIndex((s) => ~~s.x === ~~v.x && ~~s.y === ~~v.y) 

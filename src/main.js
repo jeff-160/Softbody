@@ -57,8 +57,8 @@ function LoadEvents() {
 }
 
 async function CreateAmogus() {
-    const body = await Softbody.create("body.json", window.innerWidth / 2, 0, 1, 0.005, "red")
-    const visor = await Softbody.create("visor.json", window.innerWidth / 2, 0, 0.25, 0.008, "lightblue")
+    const body = await Softbody.Load("body.json", window.innerWidth / 2, 0, 1, 0.005, "red")
+    const visor = await Softbody.Load("visor.json", window.innerWidth / 2, 0, 0.25, 0.008, "lightblue")
 
     body.Attach(visor, [[150, 80], [190, 80]], [[30, 40], [70, 40]])
     
