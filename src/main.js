@@ -1,21 +1,6 @@
-let wireframes = false
-
-window.addEventListener("keyup", e => {
-    if (e.key === " ") {
-        render.options.wireframes = wireframes = !wireframes
-
-        Composite.allComposites(engine.world).forEach(composite => {
-            composite.constraints.filter(constraint =>
-                constraint.label == "outerSpring" || constraint.label == "weldLink"
-            ).forEach(constraint => {
-                constraint.render.visible = !constraint.render.visible
-            })
-        })
-    }
-})
-
 const { Engine, Render, Runner, World, Bodies, Body, Vertices, Constraint, Composite, Events } = Matter;
 let engine, render, canvas, context
+let wireframes = false
 
 window.onload = async () => {
     engine = Engine.create()
@@ -67,21 +52,31 @@ function LoadEvents() {
         if (wireframes)
             return
 
-        RenderSoftBody(amogus[0], "red")
-        RenderSoftBody(amogus[1], "lightblue")
+        amogus.forEach(part => part.Render())
     })
 }
 
 async function CreateAmogus() {
-    const body = await LoadSoftBody("body.json", window.innerWidth / 2, 0, 1, 0.005)
-    const visor = await LoadSoftBody("visor.json", window.innerWidth / 2, 0, 0.25, 0.008)
+    const body = await Softbody.create("body.json", window.innerWidth / 2, 0, 1, 0.005, "red")
+    const visor = await Softbody.create("visor.json", window.innerWidth / 2, 0, 0.25, 0.008, "lightblue")
 
+    body.Attach(visor, [[150, 80], [190, 80]], [[30, 40], [70, 40]])
+    
     amogus = [body, visor]
 
-    amogus.forEach(part => World.add(engine.world, part))
-
-    const welds1 = AddWeld(body, [[150, 80], [190, 80]])
-    const welds2 = AddWeld(visor, [[30, 40], [70, 40]])
-
-    JoinWelds(welds1, welds2)
+    World.add(engine.world, amogus.map(softBody => softBody.model))
 }
+
+window.addEventListener("keyup", e => {
+    if (e.key === " ") {
+        render.options.wireframes = wireframes = !wireframes
+
+        amogus.forEach(part => {
+            part.model.constraints.filter(constraint => 
+                constraint.label == "outerSpring" || constraint.label =="weldLink"
+            ).forEach(constraint => {
+                constraint.render.visible = !constraint.render.visible
+            })
+        })
+    }
+})
